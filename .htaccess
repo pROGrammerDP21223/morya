@@ -1,0 +1,6 @@
+RewriteEngine On
+
+# Rewrite category/product to product.php?category=<category_slug>&slug=<product_slug>
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([a-zA-Z0-9-]+)/([a-zA-Z0-9-]+)$ product.php?category=$1&slug=$2 [L,QSA]

@@ -18,7 +18,7 @@ $dbuser = 'root';
 $dbpass = '';
 
 // Defining base url
-define("BASE_URL", "https://localhost/desktop/php/PHP-MySQL-ecommerce-website/");
+define("BASE_URL", "http://localhost/desktop/morya/");
 
 // Getting Admin url
 define("ADMIN_URL", BASE_URL . "admin" . "/");

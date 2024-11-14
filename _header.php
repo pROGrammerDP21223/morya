@@ -56,6 +56,7 @@ foreach ($result as $row) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<!--Required Meta Tags-->
 	<meta charset="utf-8" />
@@ -126,11 +127,12 @@ foreach ($result as $row) {
 	?>
 	<link rel="shortcut icon" href="assets/uploads/<?php echo $favicon; ?>" />
 	<!-- Plugins CSS -->
-	<link rel="stylesheet" href="assets/css/plugins.css" />
+	<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/plugins.css" />
 	<!-- Main Style CSS -->
-	<link rel="stylesheet" href="assets/css/style.css" />
-	<link rel="stylesheet" href="assets/css/responsive.css" />
+	<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/style.css" />
+	<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/responsive.css" />
 </head>
+
 <body class="template-index index-demo1">
 	<!-- Page Loader -->
 	<!-- <div id="pre-loader">
@@ -246,7 +248,7 @@ foreach ($result as $row) {
 								<!--Desktop Menu-->
 								<nav class="grid__item" id="AccessibleNav">
 									<ul id="siteNav" class="site-nav medium center hidearrow">
-										<li class="lvl1 parent"> <a href="#;">Home </a> </li>
+										<li class="lvl1 parent"> <a href="/">Home </a> </li>
 										<li class="lvl1 parent dropdown">
 											<a href="#;">Blog <i class="an an-angle-down-l"></i></a>
 											<ul class="dropdown">
@@ -261,7 +263,7 @@ foreach ($result as $row) {
 										</li>
 										<li class="lvl1 parent dropdown">
 											<a href="#;">Pages <i class="an an-angle-down-l"></i></a>
-											<ul class="dropdown">
+											<ul class="dropdown first-ul">
 												<?php
 												$statement = $pdo->prepare("SELECT * FROM tbl_top_category WHERE show_on_menu=1");
 												$statement->execute();
@@ -273,13 +275,20 @@ foreach ($result as $row) {
 																class="an an-angle-right-l"></i></a>
 														<ul class="dropdown second-ul">
 															<?php
-															$statement1 = $pdo->prepare("SELECT * FROM tbl_product WHERE tcat_id=?");
+															// Retrieve products with their respective category slug
+															$statement1 = $pdo->prepare("SELECT p.p_slug, p.p_name, c.tcat_slug 
+                                                 FROM tbl_product p 
+                                                 JOIN tbl_top_category c ON p.tcat_id = c.tcat_id 
+                                                 WHERE p.tcat_id = ?");
 															$statement1->execute(array($row['tcat_id']));
 															$result1 = $statement1->fetchAll(PDO::FETCH_ASSOC);
 															foreach ($result1 as $row1) {
+																// Construct the URL using category slug and product slug
+																$url = $row1['tcat_slug'] . '/' . $row1['p_slug'];
 																?>
 																<li>
-																	<a href="<?php echo $row['p_slug']; ?>" class="site-nav"><?php echo $row['p_name']; ?></a>
+																	<a href="<?php echo $url; ?>"
+																		class="site-nav"><?php echo $row1['p_name']; ?></a>
 																</li>
 																<?php
 															}
@@ -291,6 +300,8 @@ foreach ($result as $row) {
 												?>
 											</ul>
 										</li>
+
+
 										<li class="lvl1 parent"> <a href="#;">Clients </a> </li>
 										<li class="lvl1 parent"> <a href="#;">Testimonials </a> </li>
 										<li class="lvl1 parent"> <a href="#;">Blogs </a> </li>
@@ -368,7 +379,8 @@ foreach ($result as $row) {
 									foreach ($result1 as $row1) {
 										?>
 										<li>
-											<a href="<?php echo $row['p_slug']; ?>" class="site-nav"><?php echo $row['p_name']; ?></a>
+											<a href="<?php echo $row['p_slug']; ?>"
+												class="site-nav"><?php echo $row['p_name']; ?></a>
 										</li>
 										<?php
 									}

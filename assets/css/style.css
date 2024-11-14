@@ -415,8 +415,8 @@ label[for] { cursor:pointer; }
 .sticky-header .header-wrap { min-height:60px; }
 .showOverly .modalOverly { display:block; }
 .searchact .modalOverly { z-index:45; }
-body:not(.searchact) .header-main:not(.sticky-header) { background:none; box-shadow:none; border:0; }
-.header-1 .header-main:not(.sticky-header), .header-11.header-main:not(.sticky-header) { position:absolute; left:0; right:0; }
+body:not(.searchact) .header-main:not(.sticky-header) { background:#fff; box-shadow:none; border:0; }
+.header-1 .header-main:not(.sticky-header), .header-11.header-main:not(.sticky-header) { position:absolute; left:0; right:0;top:0; }
 .header-wrap > .row { width:100%; margin:0; }
 .sticky-header { position:fixed; top:0; z-index:1000; width:100%; left:0; background-color:#fff; border-bottom:0; box-shadow:0 0 4px rgba(0,0,0,0.4); -webkit-box-shadow:0 0 4px rgba(0,0,0,0.4); }
 .menu-outer .container, .menu-outer .container-fluid { position:relative; }
@@ -592,15 +592,16 @@ body:not(.searchact) .header-main:not(.sticky-header) { background:none; box-sha
     #siteNav a .lbl.nm_label5:after { border-right-color:#93a96c; }
 
     #siteNav > li.dropdown { position:relative; }
-    #siteNav > li .dropdown, #siteNav > li .dropdown ul { column-count:2;background-color:#fff; list-style:none; opacity:0; visibility:hidden; width:600px; position:absolute; top:59px; left:0; z-index:999; box-shadow:0px 0px 15px rgba(0,0,0,0.1); -webkit-box-shadow:0px 0px 15px rgba(0,0,0,0.1); -ms-transition:all 0.3s ease-in-out; -webkit-transition:all 0.3s ease-in-out; transition:all 0.3s ease-in-out; padding:10px; }
+    #siteNav > li .dropdown, #siteNav > li .dropdown ul {background-color:#fff; list-style:none; opacity:0; visibility:hidden; width:350px; position:absolute; top:59px; left:0; z-index:999; box-shadow:0px 0px 15px rgba(0,0,0,0.1); -webkit-box-shadow:0px 0px 15px rgba(0,0,0,0.1); -ms-transition:all 0.3s ease-in-out; -webkit-transition:all 0.3s ease-in-out; transition:all 0.3s ease-in-out; padding:10px; }
     #siteNav > li:hover > .dropdown, #siteNav > li .dropdown li:hover > ul { top:40px; opacity:1; visibility:visible; }
     #siteNav > li ul.dropdown li { border-top:1px solid #eeeeee; position:relative; }
     #siteNav > li ul.dropdown li:first-child { border:0; }
     #siteNav > li ul.dropdown li a { color:#000; font-weight:400; padding:8px 12px; background-color:#fff; }
-    #siteNav > li ul.dropdown li:hover > a, #siteNav > li ul.dropdown li a:hover { color:#000; padding-left:15px; }
+    #siteNav > li ul.dropdown li:hover > a, #siteNav > li ul.dropdown li a:hover { color:#e18b1d; padding-left:15px; }
     #siteNav > li ul.dropdown li a .an { font-size:18px; position:absolute; right:5px; top:8px; }
     #siteNav > li ul.dropdown li ul { top:20px; left:100%; }
     #siteNav > li ul.dropdown li:hover > ul { top:0; }
+
 
     #siteNav .menu-brand-logo { width:50%; float:left; text-align:center; padding-right:10px; }
     #siteNav .menu-brand-logo a { display:block; margin-bottom:10px; border:1px solid #ddd; }
@@ -3981,8 +3982,11 @@ ul.checkmarkList li:before { content:"\e954";font-family:'annimex-icons'; positi
 .footer-products{
   column-count: 3;
 }
-
-.second-ul{
-  width: 220px !important;
-  column-count: 1;
+/* .first-ul{
+  column-count:2;
+  height: 350px;
 }
+.second-ul{
+  width: 320px !important ;
+  column-count: 1 ;
+} */
