@@ -4,12 +4,22 @@ session_start();
 include("admin/inc/config.php");
 include("admin/inc/functions.php");
 include("admin/inc/CSRF_Protect.php");
-include("_seo_meta_tag.php");
 $csrf = new CSRF_Protect();
 $error_message = '';
 $success_message = '';
 $error_message1 = '';
 $success_message1 = '';
+
+// Getting all language variables into array as global variable
+$i = 1;
+$statement = $pdo->prepare("SELECT * FROM tbl_language");
+$statement->execute();
+$result = $statement->fetchAll(PDO::FETCH_ASSOC);
+foreach ($result as $row) {
+	define('LANG_VALUE_' . $i, $row['lang_value']);
+	$i++;
+}
+
 $statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
 $statement->execute();
 $result = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -18,8 +28,10 @@ foreach ($result as $row) {
 	$favicon = $row['favicon'];
 	$contact_email = $row['contact_email'];
 	$contact_phone = $row['contact_phone'];
-	$contact_address = $row['contact_address'];
+
+
 }
+
 // Checking the order table and removing the pending transaction that are 24 hours+ old. Very important
 $current_date_time = date('Y-m-d H:i:s');
 $statement = $pdo->prepare("SELECT * FROM tbl_payment WHERE payment_status=?");
@@ -31,6 +43,7 @@ foreach ($result as $row) {
 	$diff = $ts2 - $ts1;
 	$time = $diff / (3600);
 	if ($time > 24) {
+
 		// Return back the stock amount
 		$statement1 = $pdo->prepare("SELECT * FROM tbl_order WHERE payment_id=?");
 		$statement1->execute(array($row['payment_id']));
@@ -43,12 +56,15 @@ foreach ($result as $row) {
 				$p_qty = $row2['p_qty'];
 			}
 			$final = $p_qty + $row1['quantity'];
+
 			$statement = $pdo->prepare("UPDATE tbl_product SET p_qty=? WHERE p_id=?");
 			$statement->execute(array($final, $row1['product_id']));
 		}
+
 		// Deleting data from table
 		$statement1 = $pdo->prepare("DELETE FROM tbl_order WHERE payment_id=?");
 		$statement1->execute(array($row['payment_id']));
+
 		$statement1 = $pdo->prepare("DELETE FROM tbl_payment WHERE id=?");
 		$statement1->execute(array($row['id']));
 	}
@@ -66,80 +82,56 @@ foreach ($result as $row) {
 	<meta name="revisit-after" content="7 days" />
 	<meta name="author"
 		content="Designed and Promoted by Maharashtra Industries Directory, www.maharashtradirectory.com" />
-	<?php
-	$meta_tags = [
-		'index.php' => ['title' => $meta_title_home, 'keywords' => $meta_keyword_home, 'description' => $meta_description_home],
-		'about.php' => ['title' => $meta_title_about_us, 'keywords' => $meta_keyword_about_us, 'description' => $meta_description_about_us],
-		'company_profile.php' => ['title' => $meta_title_company_profile, 'keywords' => $meta_keyword_company_profile, 'description' => $meta_description_company_profile],
-		'our_team.php' => ['title' => $meta_title_our_team, 'keywords' => $meta_keyword_our_team, 'description' => $meta_description_our_team],
-		'plain_partition_corrugated_box.php' => ['title' => $meta_title_plain_partition_corrugated_box, 'keywords' => $meta_keyword_plain_partition_corrugated_box, 'description' => $meta_description_plain_partition_corrugated_box],
-		'corrugated_partition_box_rectangle.php' => ['title' => $meta_title_corrugated_partition_box_rectangle, 'keywords' => $meta_keyword_corrugated_partition_box_rectangle, 'description' => $meta_description_corrugated_partition_box_rectangle],
-		'corrugated_partition_box_square.php' => ['title' => $meta_title_corrugated_partition_box_square, 'keywords' => $meta_keyword_corrugated_partition_box_square, 'description' => $meta_description_corrugated_partition_box_square],
-		'quarantine_bed.php' => ['title' => $meta_title_quarantine_bed, 'keywords' => $meta_keyword_quarantine_bed, 'description' => $meta_description_quarantine_bed],
-		'corrugated_punched_box.php' => ['title' => $meta_title_corrugated_punched_box, 'keywords' => $meta_keyword_corrugated_punched_box, 'description' => $meta_description_corrugated_punched_box],
-		'duplex_corrugated_box.php' => ['title' => $meta_title_duplex_corrugated_box, 'keywords' => $meta_keyword_duplex_corrugated_box, 'description' => $meta_description_duplex_corrugated_box],
-		'plain_corrugated_boxes.php' => ['title' => $meta_title_plain_corrugated_boxes, 'keywords' => $meta_keyword_plain_corrugated_boxes, 'description' => $meta_description_plain_corrugated_boxes],
-		'plain_corrugated_packaging_box.php' => ['title' => $meta_title_plain_corrugated_packaging_box, 'keywords' => $meta_keyword_plain_corrugated_packaging_box, 'description' => $meta_description_plain_corrugated_packaging_box],
-		'flat_corrugated_boxes.php' => ['title' => $meta_title_flat_corrugated_boxes, 'keywords' => $meta_keyword_flat_corrugated_boxes, 'description' => $meta_description_flat_corrugated_boxes],
-		'fabric_corrugated_boxes.php' => ['title' => $meta_title_fabric_corrugated_boxes, 'keywords' => $meta_keyword_fabric_corrugated_boxes, 'description' => $meta_description_fabric_corrugated_boxes],
-		'corrugated_carton_boxes.php' => ['title' => $meta_title_corrugated_carton_boxes, 'keywords' => $meta_keyword_corrugated_carton_boxes, 'description' => $meta_description_corrugated_carton_boxes],
-		'corrugated_box_partitions.php' => ['title' => $meta_title_corrugated_box_partitions, 'keywords' => $meta_keyword_corrugated_box_partitions, 'description' => $meta_description_corrugated_box_partitions],
-		'plywood_boxes.php' => ['title' => $meta_title_plywood_boxes, 'keywords' => $meta_keyword_plywood_boxes, 'description' => $meta_description_plywood_boxes],
-		'wooden_packaging_boxes.php' => ['title' => $meta_title_wooden_packaging_boxes, 'keywords' => $meta_keyword_wooden_packaging_boxes, 'description' => $meta_description_wooden_packaging_boxes],
-		'industrial_wooden_boxes.php' => ['title' => $meta_title_industrial_wooden_boxes, 'keywords' => $meta_keyword_industrial_wooden_boxes, 'description' => $meta_description_industrial_wooden_boxes],
-		'heavy_duty_wooden_box.php' => ['title' => $meta_title_heavy_duty_wooden_box, 'keywords' => $meta_keyword_heavy_duty_wooden_box, 'description' => $meta_description_heavy_duty_wooden_box],
-		'heavy_duty_wooden_packaging_box.php' => ['title' => $meta_title_heavy_duty_wooden_packaging_box, 'keywords' => $meta_keyword_heavy_duty_wooden_packaging_box, 'description' => $meta_description_heavy_duty_wooden_packaging_box],
-		'plywood_pallets.php' => ['title' => $meta_title_plywood_pallets, 'keywords' => $meta_keyword_plywood_pallets, 'description' => $meta_description_plywood_pallets],
-		'pinewood_pallets.php' => ['title' => $meta_title_pinewood_pallets, 'keywords' => $meta_keyword_pinewood_pallets, 'description' => $meta_description_pinewood_pallets],
-		'corrugated_pallet_box.php' => ['title' => $meta_title_corrugated_pallet_box, 'keywords' => $meta_keyword_corrugated_pallet_box, 'description' => $meta_description_corrugated_pallet_box],
-		'industrial_wooden_pallets.php' => ['title' => $meta_title_industrial_wooden_pallets, 'keywords' => $meta_keyword_industrial_wooden_pallets, 'description' => $meta_description_industrial_wooden_pallets],
-		'corrugated_packaging_boxes.php' => ['title' => $meta_title_corrugated_packaging_boxes, 'keywords' => $meta_keyword_corrugated_packaging_boxes, 'description' => $meta_description_corrugated_packaging_boxes],
-		'corrugated_packaging_carton_box.php' => ['title' => $meta_title_corrugated_packaging_carton_box, 'keywords' => $meta_keyword_corrugated_packaging_carton_box, 'description' => $meta_description_corrugated_packaging_carton_box],
-		'laminated_packaging_box.php' => ['title' => $meta_title_laminated_packaging_box, 'keywords' => $meta_keyword_laminated_packaging_box, 'description' => $meta_description_laminated_packaging_box],
-		'handle_corrugated_box.php' => ['title' => $meta_title_handle_corrugated_box, 'keywords' => $meta_keyword_handle_corrugated_box, 'description' => $meta_description_handle_corrugated_box],
-		'handled_plain_corrugated_box.php' => ['title' => $meta_title_handled_plain_corrugated_box, 'keywords' => $meta_keyword_handled_plain_corrugated_box, 'description' => $meta_description_handled_plain_corrugated_box],
-		'plastic_handle_corrugated_box.php' => ['title' => $meta_title_plastic_handle_corrugated_box, 'keywords' => $meta_keyword_plastic_handle_corrugated_box, 'description' => $meta_description_plastic_handle_corrugated_box],
-		'corrugated_packaging_sheet.php' => ['title' => $meta_title_corrugated_packaging_sheet, 'keywords' => $meta_keyword_corrugated_packaging_sheet, 'description' => $meta_description_corrugated_packaging_sheet],
-		'heavy_duty_corrugated_box.php' => ['title' => $meta_title_heavy_duty_corrugated_box, 'keywords' => $meta_keyword_heavy_duty_corrugated_box, 'description' => $meta_description_heavy_duty_corrugated_box],
-		'heavy_duty_corrugated_packaging_box.php' => ['title' => $meta_title_heavy_duty_corrugated_packaging_box, 'keywords' => $meta_keyword_heavy_duty_corrugated_packaging_box, 'description' => $meta_description_heavy_duty_corrugated_packaging_box],
-		'laminated_duplex_box.php' => ['title' => $meta_title_laminated_duplex_box, 'keywords' => $meta_keyword_laminated_duplex_box, 'description' => $meta_description_laminated_duplex_box],
-		'heavy_duty_corrugated_pallet_box.php' => ['title' => $meta_title_heavy_duty_corrugated_pallet_box, 'keywords' => $meta_keyword_heavy_duty_corrugated_pallet_box, 'description' => $meta_description_heavy_duty_corrugated_pallet_box],
-		'clients.php' => ['title' => $meta_title_clients, 'keywords' => $meta_keyword_clients, 'description' => $meta_description_clients],
-		'testimonials.php' => ['title' => $meta_title_testimonials, 'keywords' => $meta_keyword_testimonials, 'description' => $meta_description_testimonials],
-		'blogs.php' => ['title' => $meta_title_blogs, 'keywords' => $meta_keyword_blogs, 'description' => $meta_description_blogs],
-		'career.php' => ['title' => $meta_title_career, 'keywords' => $meta_keyword_career, 'description' => $meta_description_career],
-		'contact.php' => ['title' => $meta_title_contact, 'keywords' => $meta_keyword_contact, 'description' => $meta_description_contact]
-	];
-	$cur_page = substr($_SERVER["SCRIPT_NAME"], strrpos($_SERVER["SCRIPT_NAME"], "/") + 1);
-	if (array_key_exists($cur_page, $meta_tags)) {
-		$meta = $meta_tags[$cur_page];
-		?>
-		<title><?php echo $meta['title']; ?></title>
-		<meta name="keywords" content="<?php echo $meta['keywords']; ?>">
-		<meta name="description" content="<?php echo $meta['description']; ?>">
-		<?php
-	} else {
-		?>
-		<title>CompanY Name</title>
-		<meta name="keywords" content="keywords">
-		<meta name="description" content="description">
-	<?php }
-	?>
+
 	<link rel="shortcut icon" href="assets/uploads/<?php echo $favicon; ?>" />
 	<!-- Plugins CSS -->
 	<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/plugins.css" />
 	<!-- Main Style CSS -->
 	<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/style.css" />
 	<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/responsive.css" />
+
+	<?php
+	$statement = $pdo->prepare("SELECT * FROM tbl_page");
+	$statement->execute();
+	$result = $statement->fetchAll(PDO::FETCH_ASSOC);
+	foreach ($result as $row) {
+		// Fetch meta data for different pages dynamically
+		$meta_data[$row['p_slug']] = [
+			'meta_title' => $row['meta_title'],
+			'meta_keyword' => $row['meta_keywords'],
+			'meta_description' => $row['meta_desc']
+		];
+	}
+
+	$cur_page = substr($_SERVER["SCRIPT_NAME"], strrpos($_SERVER["SCRIPT_NAME"], "/") + 1);
+	$default_meta_title = "Default Title";
+	$default_meta_keywords = "default, keywords";
+	$default_meta_description = "Default description for the website.";
+
+
+	if (isset($meta_data[$cur_page])) {
+		// Fetch the page-specific meta tags
+		$meta_title = $meta_data[$cur_page]['meta_title'];
+		$meta_keyword = $meta_data[$cur_page]['meta_keyword'];
+		$meta_description = $meta_data[$cur_page]['meta_description'];
+	} else {
+		// Default meta tags if the current page doesn't have specific meta data
+		$meta_title = $default_meta_title;
+		$meta_keyword = $default_meta_keywords;
+		$meta_description = $default_meta_description;
+	}
+
+
+	?>
+	<title><?php echo htmlspecialchars($meta_title); ?></title>
+	<meta name="keywords" content="<?php echo htmlspecialchars($meta_keyword); ?>">
+	<meta name="description" content="<?php echo htmlspecialchars($meta_description); ?>">
+
+
 </head>
 
-<body class="template-index index-demo1">
-	<!-- Page Loader -->
-	<!-- <div id="pre-loader">
-		<img src="assets/images/loader.gif" alt="Loading..." />
-	</div> -->
-	<!-- End Page Loader -->
-	<!--Page Wrapper-->
+<body class="template-index index-demo1 template-product product-layout1">
+
 	<div class="page-wrapper">
 		<!--Header-->
 		<div id="header" class="header header-1">
@@ -214,28 +206,43 @@ foreach ($result as $row) {
 							</div>
 							<!--End Setting Dropdown-->
 							<!--Minicart Drawer-->
+
 							<div class="header-cart iconset">
 								<a href="cart-style1.php" class="site-header__cart btn-minicart" data-bs-toggle="modal"
 									data-bs-target="#minicart-drawer">
-									<i class="icon an an-sq-bag"></i><span
+									<i class="icon an an-sq-bag"></i>
+									<span
 										class="site-cart-count counter d-flex-center justify-content-center position-absolute translate-middle rounded-circle">
 										<?php
-										$table_total_price = 0;
-										$total_items = 0;
-										if (isset($_SESSION['cart_p_id'])) {
-											foreach ($_SESSION['cart_p_qty'] as $key => $quantity) {
-												$price = $_SESSION['cart_p_current_price'][$key] ?? 0; // Ensure price exists
-												$table_total_price += $price * $quantity;
-												$total_items += $quantity; // Count total items
-											}
-											echo $total_items;
-										} else {
-											echo 0;
-										}
-										?>
-									</span><span class="tooltip-label">Cart</span>
+$table_total_price = 0;
+$total_products = 0; // This will count the number of distinct products
+
+if (isset($_SESSION['cart_p_id'])) {
+    // Loop through the product IDs (which represent distinct products)
+    foreach ($_SESSION['cart_p_id'] as $key => $product_id) {
+        $quantity = $_SESSION['cart_p_qty'][$key] ?? 0; // Get quantity for this product
+        $price = $_SESSION['cart_p_current_price'][$key] ?? 0; // Ensure price exists
+        $table_total_price += $price * $quantity; // Calculate the total price
+        $total_products++; // Increment distinct products counter
+
+        // Optionally, if you want to see how many distinct products are in the cart:
+        
+    }
+
+    // Now $total_products will contain the number of distinct products in the cart
+    echo $total_products;
+} else {
+    echo "0"; // If there are no products in the cart
+}
+?>
+
+
+									</span>
+
+									<span class="tooltip-label">Cart</span>
 								</a>
 							</div>
+
 						</div>
 						<!--End Right Action-->
 					</div>
@@ -379,8 +386,8 @@ foreach ($result as $row) {
 									foreach ($result1 as $row1) {
 										?>
 										<li>
-											<a href="<?php echo $row['p_slug']; ?>"
-												class="site-nav"><?php echo $row['p_name']; ?></a>
+											<a href="<?php echo $row1['p_slug']; ?>"
+												class="site-nav"><?php echo $row1['p_name']; ?></a>
 										</li>
 										<?php
 									}
