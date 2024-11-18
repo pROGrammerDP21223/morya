@@ -2940,7 +2940,7 @@ table { margin-bottom:15px; width:100%; border-collapse:collapse; border-spacing
 .product-right-sidebar .sub-heading { text-align:left; }
 .product-right-sidebar .related-product { margin-bottom:20px; }
 
-.product-single .product-single__meta { position:relative; margin-bottom:20px; }
+.product-single .product-single__meta { position:relative;  }
 .product-single .product-featured-img { width:100%; display:block; margin:0 auto; }
 .product-single .grid_item-title { font-size:26px; margin-bottom:25px; }
 

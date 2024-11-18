@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 16, 2024 at 12:51 PM
+-- Generation Time: Nov 18, 2024 at 01:09 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,47 @@ SET time_zone = "+00:00";
 --
 -- Database: `morya`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `settings`
+--
+
+CREATE TABLE `settings` (
+  `id` int(11) NOT NULL,
+  `setting_name` varchar(255) NOT NULL,
+  `setting_value` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `settings`
+--
+
+INSERT INTO `settings` (`id`, `setting_name`, `setting_value`) VALUES
+(1, 'default_shipping_cost', '10.00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `shipping_costs`
+--
+
+CREATE TABLE `shipping_costs` (
+  `id` int(11) NOT NULL,
+  `postal_code` varchar(10) NOT NULL,
+  `cost` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `shipping_costs`
+--
+
+INSERT INTO `shipping_costs` (`id`, `postal_code`, `cost`) VALUES
+(1, '10001', 5.50),
+(2, '20002', 7.00),
+(3, '30003', 6.25),
+(4, '40004', 8.00);
 
 -- --------------------------------------------------------
 
@@ -874,7 +915,7 @@ CREATE TABLE `tbl_product` (
 --
 
 INSERT INTO `tbl_product` (`p_id`, `p_name`, `p_slug`, `p_old_price`, `p_current_price`, `p_qty`, `p_featured_photo`, `p_description`, `p_short_description`, `p_total_view`, `p_is_featured`, `p_is_active`, `tcat_id`) VALUES
-(1, 'Plain Partition Corrugated Box', 'plain-partition-corrugated-box', '100.00', '90.00', 100000, 'plain-partition-corrugated-box.jpg', 'Description here', 'Short description here', 205, 0, 1, 1),
+(1, 'Plain Partition Corrugated Box', 'plain-partition-corrugated-box', '100.00', '90.00', 100000, 'plain-partition-corrugated-box.jpg', 'Description here', 'Short description here', 314, 0, 1, 1),
 (2, 'Corrugated Partition Box Rectangle', 'corrugated-partition-box-rectangle', '120.00', '110.00', 151000, 'corrugated-partition-box-rectangle.jpg', 'Description here', 'Short description here', 10, 0, 1, 1),
 (3, 'Corrugated Partition Box Square', 'corrugated-partition-box-square', '120.00', '110.00', 15, 'corrugated-partition-box-square.jpg', 'Description here', 'Short description here', 0, 0, 1, 1),
 (4, 'Quarantine Bed', 'quarantine-bed', '200.00', '180.00', 5, 'quarantine-bed.jpg', 'Description here', 'Short description here', 0, 0, 1, 2),
@@ -1509,6 +1550,18 @@ INSERT INTO `tbl_video` (`id`, `title`, `iframe_code`) VALUES
 --
 
 --
+-- Indexes for table `settings`
+--
+ALTER TABLE `settings`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `shipping_costs`
+--
+ALTER TABLE `shipping_costs`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `tbl_color`
 --
 ALTER TABLE `tbl_color`
@@ -1674,6 +1727,18 @@ ALTER TABLE `tbl_video`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `settings`
+--
+ALTER TABLE `settings`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `shipping_costs`
+--
+ALTER TABLE `shipping_costs`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `tbl_color`

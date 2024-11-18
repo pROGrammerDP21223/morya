@@ -69,14 +69,14 @@ foreach ($result as $row) {
 // Handling reviews
 if (isset($_POST['form_review'])) {
     $statement = $pdo->prepare("SELECT * FROM tbl_rating WHERE p_id = ? AND cust_id = ?");
-    $statement->execute([$_REQUEST['id'], $_SESSION['customer']['cust_id']]);
+    $statement->execute([$p_id, $_SESSION['customer']['cust_id']]);
     $total = $statement->rowCount();
 
     if ($total) {
         $error_message = "You already have given a rating!";
     } else {
         $statement = $pdo->prepare("INSERT INTO tbl_rating (p_id, cust_id, comment, rating) VALUES (?, ?, ?, ?)");
-        $statement->execute([$_REQUEST['id'], $_SESSION['customer']['cust_id'], $_POST['comment'], $_POST['rating']]);
+        $statement->execute([$p_id, $_SESSION['customer']['cust_id'], $_POST['comment'], $_POST['rating']]);
         $success_message = "Rating is Submitted Successfully!";
     }
 }
@@ -129,7 +129,7 @@ if (isset($_POST['form_add_to_cart'])) {
         // Check if the product is already in the cart
         $added = false;
         foreach ($_SESSION['cart_p_id'] as $key => $value) {
-            if ($_SESSION['cart_p_id'][$key] == $_REQUEST['id'] && $_SESSION['cart_size_id'][$key] == $size_id && $_SESSION['cart_color_id'][$key] == $color_id) {
+            if ($_SESSION['cart_p_id'][$key] == $p_id && $_SESSION['cart_size_id'][$key] == $size_id && $_SESSION['cart_color_id'][$key] == $color_id) {
                 $added = true;
                 break;
             }
@@ -161,7 +161,7 @@ if (isset($_POST['form_add_to_cart'])) {
             }
 
             // Add the product to the cart
-            $_SESSION['cart_p_id'][$new_key] = $_REQUEST['id'];
+            $_SESSION['cart_p_id'][$new_key] = $p_id;
             $_SESSION['cart_size_id'][$new_key] = $size_id;
             $_SESSION['cart_size_name'][$new_key] = $size_name;
             $_SESSION['cart_color_id'][$new_key] = $color_id;
@@ -318,34 +318,29 @@ if (!empty($success_message1)) {
                             <!-- Swatches Size -->
                             <?php if (isset($size)): ?>
                                 <div class="mydict mb-3">
-                                    <div>
-                                        <div class="mt-0">Select Size : &nbsp;</div>
+                                    <div style="width:260px;">
+                                        <!-- <div class="mt-0">Select Size : &nbsp;</div> -->
                                         <?php
                                         $statement = $pdo->prepare("SELECT * FROM tbl_size");
                                         $statement->execute();
                                         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-                                        foreach ($result as $row) {
-                                            if (in_array($row['size_id'], $size)) {
-                                                ?>
-                                                <label>
-                                                    <input type="radio" onclick="toggleInputField(false)" name="size_id"
-                                                        value="<?= $row['size_id'] ?>" required>
-                                                    <span><?= htmlspecialchars($row['size_name']) ?></span>
-                                                </label>
-                                                <?php
-                                            }
-                                        }
                                         ?>
-                                        <label>
-                                            <input type="radio" name="size_id" value="option3"
-                                                onclick="toggleInputField(true)"> <span>Custom Size</span>
-                                        </label>
-                                        <!-- Option for Custom Size -->
-                                        <div id="input-container" style="display: none;">
+                                        <select name="size_id" required>
+                                            <option value="" disabled selected>Select Size</option>
+                                            <?php
+                                            foreach ($result as $row) {
+                                                // Check if the size_id exists in the $size array
+                                                if (in_array($row['size_id'], $size)) {
+                                                    ?>
+                                                    <option value="<?= $row['size_id'] ?>">
+                                                        <?= htmlspecialchars($row['size_name']) ?></option>
+                                                    <?php
+                                                }
+                                            }
+                                            ?>
+                                        </select>
 
-                                            <input type="text" id="custom-input" name="size_id"
-                                                placeholder="Enter Size in INCHES">
-                                        </div>
+
                                     </div>
                                 </div>
                             <?php endif; ?>
@@ -362,11 +357,11 @@ if (!empty($success_message1)) {
 
                         ?>
 
-<input type="hidden" name="p_current_price" value="<?php echo $p_current_price; ?>">
-                            <input type="hidden" name="p_name" value="<?php echo $p_name; ?>">
-                            <input type="hidden" name="p_featured_photo" value="<?php echo $p_featured_photo; ?>">
+                        <input type="hidden" name="p_current_price" value="<?php echo $p_current_price; ?>">
+                        <input type="hidden" name="p_name" value="<?php echo $p_name; ?>">
+                        <input type="hidden" name="p_featured_photo" value="<?php echo $p_featured_photo; ?>">
                         <!-- Quantity and Add to Cart Button -->
-                        <div class="product-action w-100 clearfix" style="margin-top:40px">
+                        <div class="product-action w-100 clearfix" style="margin-top:20px">
                             <?php if ($current_p_qty > 0) { ?>
                                 <div class="product-form__item--quantity d-flex-center mb-3" style="gap:40px;">
                                     <div class="qtyField">
@@ -440,14 +435,14 @@ if (!empty($success_message1)) {
                                                             WHERE t1.p_id=?");
                 $statement->execute(array($p_id));
                 $row = $statement->fetch(PDO::FETCH_ASSOC);
-// Check if $row is valid and contains 'avg_rating'
-if ($row !== false && isset($row['avg_rating'])) {
-    // Get the average rating and round it
-    $average_rating = $row['avg_rating'] !== null ? round($row['avg_rating']) : 0; // Use 0 if the average is null
-} else {
-    // Set a default value (e.g., 0) if no valid rating is found
-    $average_rating = 0;
-}
+                // Check if $row is valid and contains 'avg_rating'
+                if ($row !== false && isset($row['avg_rating'])) {
+                    // Get the average rating and round it
+                    $average_rating = $row['avg_rating'] !== null ? round($row['avg_rating']) : 0; // Use 0 if the average is null
+                } else {
+                    // Set a default value (e.g., 0) if no valid rating is found
+                    $average_rating = 0;
+                }
                 $total = $statement->rowCount();
                 ?>
                 <h3 class="tabs-ac-style d-md-none" rel="reviews">Review</h3>
@@ -457,18 +452,18 @@ if ($row !== false && isset($row['avg_rating'])) {
                             <div class="spr-header clearfix d-flex-center justify-content-between">
                                 <div class="product-review d-flex-center me-auto">
                                     <a class="reviewLink" href="#">
-                                    <?php 
-    // Loop through to display filled stars (an-star) based on the average rating
-    for ($i = 1; $i <= 5; $i++) {
-        if ($i <= $average_rating) {
-            // Show filled star
-            echo '<i class="icon an an-star"></i>';
-        } else {
-            // Show empty star
-            echo '<i class="icon an an-star-o"></i>';
-        }
-    }
-    ?>
+                                        <?php
+                                        // Loop through to display filled stars (an-star) based on the average rating
+                                        for ($i = 1; $i <= 5; $i++) {
+                                            if ($i <= $average_rating) {
+                                                // Show filled star
+                                                echo '<i class="icon an an-star"></i>';
+                                            } else {
+                                                // Show empty star
+                                                echo '<i class="icon an an-star-o"></i>';
+                                            }
+                                        }
+                                        ?>
                                     </a>
                                     <span class="spr-summary-actions-togglereviews ms-2">Based on <?php echo $total; ?>
                                         reviews</span>
@@ -535,53 +530,54 @@ if ($row !== false && isset($row['avg_rating'])) {
                             <div class="spr-reviews">
                                 <h4 class="spr-form-title text-uppercase mb-3">Customer Reviews</h4>
                                 <div class="review-inner">
-                                <?php
-                                        if($total) {
-                                            $j=0;
-                                            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-                                            foreach ($result as $row) {
-                                                $j++;
-                                                ?>
-                                    <div class="spr-review">
-                                        <div class="spr-review-header">
-                                            <span class="product-review spr-starratings"><span class="reviewLink">
-                                           
-
-                                                        <?php
-                                                                for($i=1;$i<=5;$i++) {
-                                                                    ?>
-                                                                    <?php if($i>$row['rating']): ?>
-                                                                        <i class="icon an an-star-o"></i>
-                                                                    <?php else: ?>
-                                                                        <i class="icon an an-star"></i>
-                                                                    <?php endif; ?>
-                                                                    <?php
-                                                                }
-                                                                ?>
-                                                    
-                                                    
-                                                    </span></span>
-                                            <h5 class="spr-review-header-title mt-1">Lorem ipsum dolor sit amet</h5>
-                                            <span class="spr-review-header-byline"><strong><?php echo $row['cust_name']; ?></strong></span>
-                                        </div>
-                                        <div class="spr-review-content">
-                                            <p class="spr-review-content-body"><?php echo $row['comment']; ?></p>
-                                        </div>
-                                    </div>
                                     <?php
-                                            }
-                                        } else {
-                                            echo "No Reviews found";
+                                    if ($total) {
+                                        $j = 0;
+                                        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+                                        foreach ($result as $row) {
+                                            $j++;
+                                            ?>
+                                            <div class="spr-review">
+                                                <div class="spr-review-header">
+                                                    <span class="product-review spr-starratings"><span class="reviewLink">
+
+
+                                                            <?php
+                                                            for ($i = 1; $i <= 5; $i++) {
+                                                                ?>
+                                                                <?php if ($i > $row['rating']): ?>
+                                                                    <i class="icon an an-star-o"></i>
+                                                                <?php else: ?>
+                                                                    <i class="icon an an-star"></i>
+                                                                <?php endif; ?>
+                                                                <?php
+                                                            }
+                                                            ?>
+
+
+                                                        </span></span>
+                                                    <h5 class="spr-review-header-title mt-1">Lorem ipsum dolor sit amet</h5>
+                                                    <span
+                                                        class="spr-review-header-byline"><strong><?php echo $row['cust_name']; ?></strong></span>
+                                                </div>
+                                                <div class="spr-review-content">
+                                                    <p class="spr-review-content-body"><?php echo $row['comment']; ?></p>
+                                                </div>
+                                            </div>
+                                            <?php
                                         }
-                                        ?>
-                                          <?php
-                                        if($error_message != '') {
-                                            echo "<script>alert('".$error_message."')</script>";
-                                        }
-                                        if($success_message != '') {
-                                            echo "<script>alert('".$success_message."')</script>";
-                                        }
-                                        ?>
+                                    } else {
+                                        echo "No Reviews found";
+                                    }
+                                    ?>
+                                    <?php
+                                    if ($error_message != '') {
+                                        echo "<script>alert('" . $error_message . "')</script>";
+                                    }
+                                    if ($success_message != '') {
+                                        echo "<script>alert('" . $success_message . "')</script>";
+                                    }
+                                    ?>
 
                                 </div>
                             </div>
@@ -721,4 +717,3 @@ if ($row !== false && isset($row['avg_rating'])) {
         });
     </script>
     <?php require_once('_footer.php'); ?>
-</div>
