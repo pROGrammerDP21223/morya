@@ -73,7 +73,7 @@ if (isset($_POST['form1'])) {
 
 <style>
     #page-content {
-        padding-top: 140px;
+        padding-top: 130px;
     }
 </style>
 <!--Body Container-->
@@ -319,6 +319,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 
+
 <div class="col-12 col-sm-12 col-md-12 col-lg-4 cart__footer">
     <div class="cart_info">
         <div id="shipping-calculator" class="mb-4 cart-col">
@@ -347,7 +348,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <span class="money">
                         <?php
                         if ($valid_shipping) {
-                            echo "$" . number_format($shipping_cost, 2);
+                            $_SESSION['shipping_message'] =  number_format($shipping_cost, 2);
+                            echo "$".$_SESSION['shipping_message'];
                         } else {
                             echo "Please enter a postal code.";
                         }
@@ -370,7 +372,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             <!-- Proceed to Checkout Button, hidden by default -->
             <?php if ($valid_shipping): ?>
-                <a href="checkout-style1.html" id="cartCheckout" class="btn btn--small-wide rounded my-4 checkout">
+                <a href="checkout.php" id="cartCheckout" class="btn btn--small-wide rounded my-4 checkout">
                     Proceed To Checkout
                 </a>
             <?php else: ?>

@@ -3345,7 +3345,7 @@ ul.checkmarkList li:before { content:"\e954";font-family:'annimex-icons'; positi
 .dashboard-content .profile-img { display:flex; align-items:center; margin:0 0; background-color:rgb(255, 255, 255); box-shadow:rgba(3, 0, 71, 0.09) 0px 1px 3px; border-radius:8px; padding:1rem; }
 .dashboard-content .profile-img .lbl { margin-left:auto; text-align:right; letter-spacing:0.2em; color:rgb(125, 135, 156); }
 .dashboard-content .profile-order { list-style:none; display:flex; flex-wrap:wrap; text-align:center; margin:0; padding:0; }
-.dashboard-content .profile-order li { background-color:rgb(255, 255, 255); box-shadow:rgba(3, 0, 71, 0.09) 0px 1px 3px; border-radius:8px; padding:1rem; -webkit-flex:1; flex:1;  margin:0 0.4rem 0.4rem; font-size:12px; line-height:1.5; }
+.dashboard-content .profile-order li { background-color:rgb(255, 255, 255);border: 2px solid #000; border-radius:8px; padding:1rem; -webkit-flex:1; flex:1;  margin:0 0.4rem 0.4rem; font-size:12px; line-height:1.5; }
 
 .tracking-detail ul li { display: -webkit-box; display: -ms-flexbox; display: flex; margin-bottom: 5px; }
 .tracking-detail ul li .left { min-width: 220px; text-transform: capitalize; font-weight: 600; }

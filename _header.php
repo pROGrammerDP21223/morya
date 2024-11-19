@@ -28,6 +28,7 @@ foreach ($result as $row) {
 	$favicon = $row['favicon'];
 	$contact_email = $row['contact_email'];
 	$contact_phone = $row['contact_phone'];
+	$contact_address = $row['contact_address'];
 
 
 }
@@ -208,33 +209,32 @@ foreach ($result as $row) {
 							<!--Minicart Drawer-->
 
 							<div class="header-cart iconset">
-								<a href="cart-style1.php" class="site-header__cart btn-minicart" data-bs-toggle="modal"
-									data-bs-target="#minicart-drawer">
+								<a href="cartphp" class="site-header__cart btn-minicart">
 									<i class="icon an an-sq-bag"></i>
 									<span
 										class="site-cart-count counter d-flex-center justify-content-center position-absolute translate-middle rounded-circle">
 										<?php
-$table_total_price = 0;
-$total_products = 0; // This will count the number of distinct products
+										$table_total_price = 0;
+										$total_products = 0; // This will count the number of distinct products
+										
+										if (isset($_SESSION['cart_p_id'])) {
+											// Loop through the product IDs (which represent distinct products)
+											foreach ($_SESSION['cart_p_id'] as $key => $product_id) {
+												$quantity = $_SESSION['cart_p_qty'][$key] ?? 0; // Get quantity for this product
+												$price = $_SESSION['cart_p_current_price'][$key] ?? 0; // Ensure price exists
+												$table_total_price += $price * $quantity; // Calculate the total price
+												$total_products++; // Increment distinct products counter
+										
+												// Optionally, if you want to see how many distinct products are in the cart:
+										
+											}
 
-if (isset($_SESSION['cart_p_id'])) {
-    // Loop through the product IDs (which represent distinct products)
-    foreach ($_SESSION['cart_p_id'] as $key => $product_id) {
-        $quantity = $_SESSION['cart_p_qty'][$key] ?? 0; // Get quantity for this product
-        $price = $_SESSION['cart_p_current_price'][$key] ?? 0; // Ensure price exists
-        $table_total_price += $price * $quantity; // Calculate the total price
-        $total_products++; // Increment distinct products counter
-
-        // Optionally, if you want to see how many distinct products are in the cart:
-        
-    }
-
-    // Now $total_products will contain the number of distinct products in the cart
-    echo $total_products;
-} else {
-    echo "0"; // If there are no products in the cart
-}
-?>
+											// Now $total_products will contain the number of distinct products in the cart
+											echo $total_products;
+										} else {
+											echo "0"; // If there are no products in the cart
+										}
+										?>
 
 
 									</span>

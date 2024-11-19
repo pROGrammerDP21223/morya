@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 18, 2024 at 01:09 PM
+-- Generation Time: Nov 19, 2024 at 01:39 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -759,15 +759,16 @@ CREATE TABLE `tbl_order` (
   `color` varchar(100) NOT NULL,
   `quantity` varchar(50) NOT NULL,
   `unit_price` varchar(50) NOT NULL,
-  `payment_id` varchar(255) NOT NULL
+  `payment_id` varchar(255) NOT NULL,
+  `cust_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `tbl_order`
 --
 
-INSERT INTO `tbl_order` (`id`, `product_id`, `product_name`, `size`, `color`, `quantity`, `unit_price`, `payment_id`) VALUES
-(50, 81, 'Black Wool Beanie & Bobble Hat For Unisex', '', 'Black', '1', '1', '1524666526');
+INSERT INTO `tbl_order` (`id`, `product_id`, `product_name`, `size`, `color`, `quantity`, `unit_price`, `payment_id`, `cust_id`) VALUES
+(50, 81, 'Black Wool Beanie & Bobble Hat For Unisex', '', 'Black', '1', '1', '1524666526', 6);
 
 -- --------------------------------------------------------
 
@@ -825,7 +826,17 @@ CREATE TABLE `tbl_payment` (
 
 INSERT INTO `tbl_payment` (`id`, `customer_id`, `customer_name`, `customer_email`, `payment_date`, `txnid`, `paid_amount`, `card_number`, `card_cvv`, `card_month`, `card_year`, `bank_transaction_info`, `payment_method`, `payment_status`, `shipping_status`, `payment_id`) VALUES
 (45, 5, 'Hammad Hassan', 'mc170200216@vu.edu.pk', '2018-04-24 15:07:35', '', 46, '', '', '', '', 'Bank Deposit Information\r\n', 'Bank Deposit', 'Completed', 'Completed', '1524568055'),
-(46, 5, 'Hammad Hassan', 'mc170200216@vu.edu.pk', '2018-04-25 18:28:46', '', 1, '', '', '', '', '', 'PayPal', 'Completed', 'Completed', '1524666526');
+(46, 5, 'Hammad Hassan', 'mc170200216@vu.edu.pk', '2018-04-25 18:28:46', '', 1, '', '', '', '', '', 'PayPal', 'Completed', 'Completed', '1524666526'),
+(116, 6, 'Dhananjay Phirke', 'dhananjayphirke@gmail.com', '2024-10-01 10:30:00', 'TXN001', 101, '4111111111111111', '123', '12', '2026', 'Bank Transfer', 'Credit Card', 'Completed', 'Shipped', ''),
+(117, 6, 'Dhananjay Phirke', 'dhananjayphirke@gmail.com', '2024-10-05 12:45:00', 'TXN002', 246, '4111111111111111', '456', '11', '2025', 'Online Payment', 'Debit Card', 'Completed', 'Shipped', ''),
+(118, 6, 'Dhananjay Phirke', 'dhananjayphirke@gmail.com', '2024-10-08 15:20:00', 'TXN003', 90, '4111111111111111', '789', '10', '2025', 'Bank Transfer', 'Credit Card', 'Completed', '0', ''),
+(119, 6, 'Dhananjay Phirke', 'dhananjayphirke@gmail.com', '2024-10-10 14:00:00', 'TXN004', 175, '4111111111111111', '321', '9', '2025', 'Online Payment', 'Debit Card', 'Processing', 'Pending', '1524666526'),
+(120, 6, 'Dhananjay Phirke', 'dhananjayphirke@gmail.com', '2024-10-12 11:10:00', 'TXN005', 341, '4111111111111111', '654', '1', '2027', 'Bank Transfer', 'Credit Card', 'Completed', '1', ''),
+(121, 6, 'Dhananjay Phirke', 'dhananjayphirke@gmail.com', '2024-10-15 13:30:00', 'TXN006', 230, '4111111111111111', '987', '3', '2026', 'Online Payment', 'Debit Card', 'Completed', '2', ''),
+(122, 7, 'Dhananjay Phirke', 'dhananjayphirke@gmail.com', '2024-10-18 16:25:00', 'TXN007', 410, '4111111111111111', '135', '6', '2026', 'Bank Transfer', 'Credit Card', 'Processing', 'Pending', ''),
+(123, 6, 'Dhananjay Phirke', 'dhananjayphirke@gmail.com', '2024-10-20 09:50:00', 'TXN008', 100, '4111111111111111', '246', '8', '2025', 'Online Payment', 'Debit Card', 'Completed', 'Shipped', ''),
+(124, 6, 'Dhananjay Phirke', 'dhananjayphirke@gmail.com', '2024-10-22 17:15:00', 'TXN009', 315, '4111111111111111', '357', '7', '2027', 'Bank Transfer', 'Credit Card', 'Completed', 'Shipped', ''),
+(125, 10, 'Dhananjay Phirke', 'dhananjayphirke@gmail.com', '2024-10-25 10:00:00', 'TXN010', 580, '4111111111111111', '468', '5', '2025', 'Online Payment', 'Debit Card', 'Processing', 'Pending', '');
 
 -- --------------------------------------------------------
 
@@ -915,9 +926,9 @@ CREATE TABLE `tbl_product` (
 --
 
 INSERT INTO `tbl_product` (`p_id`, `p_name`, `p_slug`, `p_old_price`, `p_current_price`, `p_qty`, `p_featured_photo`, `p_description`, `p_short_description`, `p_total_view`, `p_is_featured`, `p_is_active`, `tcat_id`) VALUES
-(1, 'Plain Partition Corrugated Box', 'plain-partition-corrugated-box', '100.00', '90.00', 100000, 'plain-partition-corrugated-box.jpg', 'Description here', 'Short description here', 314, 0, 1, 1),
-(2, 'Corrugated Partition Box Rectangle', 'corrugated-partition-box-rectangle', '120.00', '110.00', 151000, 'corrugated-partition-box-rectangle.jpg', 'Description here', 'Short description here', 10, 0, 1, 1),
-(3, 'Corrugated Partition Box Square', 'corrugated-partition-box-square', '120.00', '110.00', 15, 'corrugated-partition-box-square.jpg', 'Description here', 'Short description here', 0, 0, 1, 1),
+(1, 'Plain Partition Corrugated Box', 'plain-partition-corrugated-box', '100.00', '90.00', 100000, 'plain-partition-corrugated-box.jpg', 'Description here', 'Short description here', 329, 0, 1, 1),
+(2, 'Corrugated Partition Box Rectangle', 'corrugated-partition-box-rectangle', '120.00', '110.00', 151000, 'corrugated-partition-box-rectangle.jpg', 'Description here', 'Short description here', 12, 0, 1, 1),
+(3, 'Corrugated Partition Box Square', 'corrugated-partition-box-square', '120.00', '110.00', 15, 'corrugated-partition-box-square.jpg', 'Description here', 'Short description here', 1, 0, 1, 1),
 (4, 'Quarantine Bed', 'quarantine-bed', '200.00', '180.00', 5, 'quarantine-bed.jpg', 'Description here', 'Short description here', 0, 0, 1, 2),
 (5, 'Corrugated Punched Box', 'corrugated-punched-box', '150.00', '130.00', 20, 'corrugated-punched-box.jpg', 'Description here', 'Short description here', 0, 0, 1, 2),
 (6, 'Duplex Corrugated Box', 'duplex-corrugated-box', '160.00', '140.00', 10, 'duplex-corrugated-box.jpg', 'Description here', 'Short description here', 0, 0, 1, 2),
@@ -1804,7 +1815,7 @@ ALTER TABLE `tbl_page`
 -- AUTO_INCREMENT for table `tbl_payment`
 --
 ALTER TABLE `tbl_payment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=116;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=126;
 
 --
 -- AUTO_INCREMENT for table `tbl_photo`

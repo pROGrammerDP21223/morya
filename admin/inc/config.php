@@ -18,10 +18,10 @@ $dbuser = 'root';
 $dbpass = '';
 
 // Defining base url
-define("BASE_URL", "http://localhost/desktop/morya/");
+define("BASE_URL", "/");
 
 // Getting Admin url
-define("ADMIN_URL", BASE_URL . "admin" . "/");
+define("ADMIN_URL", BASE_URL . "admin" . "http://project1.local/");
 
 try {
 	$pdo = new PDO("mysql:host={$dbhost};dbname={$dbname}", $dbuser, $dbpass);

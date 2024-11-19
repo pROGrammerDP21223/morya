@@ -1,12 +1,23 @@
-<?php require_once('_header.php'); ?>
+<?php require_once('_header.php');
+
+if (isset($_SESSION['customer'])) {
+    header('location: ' . BASE_URL . 'dashboard.php');
+    exit;
+}
+
+?>
 
 <?php
 if(isset($_POST['form1'])) {
-        
+
+    // Initialize error_message
+    $error_message = '';
+
+    // Directly using the text from the provided language data
     if(empty($_POST['cust_email']) || empty($_POST['cust_password'])) {
-        $error_message = LANG_VALUE_132.'<br>';
+        // Replaced LANG_VALUE_132 with the actual text
+        $error_message = 'Email and/or Password can not be empty.' . '<br>';
     } else {
-        
         $cust_email = strip_tags($_POST['cust_email']);
         $cust_password = strip_tags($_POST['cust_password']);
 
@@ -14,34 +25,44 @@ if(isset($_POST['form1'])) {
         $statement->execute(array($cust_email));
         $total = $statement->rowCount();
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        
         foreach($result as $row) {
             $cust_status = $row['cust_status'];
             $row_password = $row['cust_password'];
         }
 
-        if($total==0) {
-            $error_message .= LANG_VALUE_133.'<br>';
+        if($total == 0) {
+            // Replaced LANG_VALUE_133 with the actual text
+            $error_message .= 'Email Address does not match.' . '<br>';
         } else {
-            //using MD5 form
-            if( $row_password != md5($cust_password) ) {
-                $error_message .= LANG_VALUE_139.'<br>';
+            // Using MD5 form
+            if($row_password != md5($cust_password)) {
+                // Replaced LANG_VALUE_139 with the actual text
+                $error_message .= 'Passwords do not match.' . '<br>';
             } else {
                 if($cust_status == 0) {
-                    $error_message .= LANG_VALUE_148.'<br>';
+                    // Replaced LANG_VALUE_148 with the actual text
+                    $error_message .= 'Sorry! Your account is inactive. Please contact the administrator.' . '<br>';
                 } else {
                     $_SESSION['customer'] = $row;
 
-            // Encode session data to JSON and save it to a file
-            $json_data = json_encode($_SESSION['customer']);
-            file_put_contents('customer_session_data.json', $json_data);
-                    header("location:  dashboard.php");
+                    // Encode session data to JSON and save it to a file
+                    $json_data = json_encode($_SESSION['customer']);
+                    file_put_contents('customer_session_data.json', $json_data);
+                    header("location: dashboard.php");
                 }
             }
-            
         }
     }
 }
 ?>
+
+<style>
+    #page-content {
+        padding-top: 130px;
+    }
+</style>
+
 
             <!--Body Container-->
             <div id="page-content">   
