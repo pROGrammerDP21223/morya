@@ -84,7 +84,7 @@ foreach ($result as $row) {
 	<meta name="author"
 		content="Designed and Promoted by Maharashtra Industries Directory, www.maharashtradirectory.com" />
 
-	<link rel="shortcut icon" href="assets/uploads/<?php echo $favicon; ?>" />
+	<link rel="shortcut icon" href="/assets/uploads/<?php echo $favicon; ?>" />
 	<!-- Plugins CSS -->
 	<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/plugins.css" />
 	<!-- Main Style CSS -->
@@ -173,7 +173,7 @@ foreach ($result as $row) {
 							<!--End Mobile Toggle-->
 							<!--Logo-->
 							<div class="logo mx-lg-auto">
-								<a href="index.php"><img class="logo-img" src="assets/uploads/<?php echo $logo; ?>"
+								<a href="index.php"><img class="logo-img" src="/assets/uploads/<?php echo $logo; ?>"
 										alt="Company Name " title="Company Name " /><span
 										class="logo-txt d-none">Company Name</span></a>
 							</div>
@@ -194,12 +194,13 @@ foreach ($result as $row) {
 									<?php
 									if (isset($_SESSION['customer'])) {
 										?>
-										<li><a href="login.php">Login</a></li>
-										<li><a href="register.php">Sign Up</a></li>
+										<li><a href="/dashboard.php">Dashboard</a></li>
 										<?php
 									} else {
 										?>
-										<li><a href="dashboard.php">Dashboard</a></li>
+										<li><a href="/login.php">Login</a></li>
+										<li><a href="/register.php">Sign Up</a></li>
+										
 										<?php
 									}
 									?>
@@ -209,7 +210,7 @@ foreach ($result as $row) {
 							<!--Minicart Drawer-->
 
 							<div class="header-cart iconset">
-								<a href="cartphp" class="site-header__cart btn-minicart">
+								<a href="/cart.php" class="site-header__cart btn-minicart">
 									<i class="icon an an-sq-bag"></i>
 									<span
 										class="site-cart-count counter d-flex-center justify-content-center position-absolute translate-middle rounded-circle">
